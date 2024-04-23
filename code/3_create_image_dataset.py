@@ -68,12 +68,9 @@ def create_dataset(load, number_of_images, upper_limit=0):
     return data, lab
 
 
-if __name__ == "__main__":
+def create_image_dataset(load_path=r"audio\spectograms", save_path=r"audio\ready_dataset"):
     upperlimit = 0
     number_of_examples = 150
-    load_path = r"audio\spectograms"
-    save_path = r"audio\ready_dataset"
-
 
     try:
         os.mkdir(save_path)
@@ -86,3 +83,4 @@ if __name__ == "__main__":
     np.save(os.path.join(save_path, "labels"), np.array(labs))
     data_set = np.array(data_set)
     print(data_set.shape)
+
