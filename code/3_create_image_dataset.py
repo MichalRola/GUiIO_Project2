@@ -71,8 +71,8 @@ def create_dataset(load, number_of_images, upper_limit=0):
 if __name__ == "__main__":
     upperlimit = 0
     number_of_examples = 150
-    load_path = r"D:\Folders\_Engineering_ThesisV2\training_data\spectrograms\control"
-    save_path = r"D:\Folders\_Engineering_ThesisV2\training_data\ready_dataset\control"
+    load_path = r"audio\spectograms"
+    save_path = r"audio\ready_dataset"
 
 
     try:

@@ -40,8 +40,8 @@ def create_melspectrogram(load, save, file_name, chunk_size):
 
 
 if __name__ == "__main__":
-    load_path = r"D:\Folders\_Engineering_ThesisV2\training_data\wave"
-    save_path = r"D:\Folders\_Engineering_ThesisV2\training_data\spectrograms\Slaney"
+    load_path = r"Data\genres_original\jazz"
+    save_path = r"Data\spectograms\jazz"
 
     length_of_sample = 10                                   # Sample length in seconds.
     sample_width = int(length_of_sample * SAMPLING_RATE)    # Converting to sample length with sampling rate.
@@ -59,4 +59,4 @@ if __name__ == "__main__":
         for filename in files:
             parts_of_dir = root.split("\\")
             dirname = parts_of_dir[len(parts_of_dir)-1]
-            create_melspectrogram(root, os.path.join(save_path, dirname), filename, sample_width)
+            create_melspectrogram(root,save_path, filename, sample_width)
