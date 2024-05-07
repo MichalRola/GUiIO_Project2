@@ -39,8 +39,8 @@ def create_melspectrogram(load, save, file_name, chunk_size):
     return
 
 
-def convert_audio_files_into_images(load_path=r"Data\genres_original\jazz", save_path=r"Data\spectograms\jazz"):
-    length_of_sample = 10  # Sample length in seconds.
+def convert_audio_files_into_images(load_path=r"Data\genres_original\jazz", save_path=r"Data\spectograms\jazz", sample_length=10):
+    length_of_sample = sample_length  # Sample length in seconds.
     sample_width = int(length_of_sample * SAMPLING_RATE)  # Converting to sample length with sampling rate.
 
     # Creating folders, if necessary.
