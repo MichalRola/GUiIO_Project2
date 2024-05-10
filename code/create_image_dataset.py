@@ -70,7 +70,7 @@ def create_dataset(load, number_of_images, upper_limit=0):
 
 def create_image_dataset(load_path=r"audio\spectograms", save_path=r"audio\ready_dataset"):
     upperlimit = 0
-    number_of_examples = 150
+    number_of_examples = 99
 
     try:
         os.mkdir(save_path)
@@ -81,6 +81,7 @@ def create_image_dataset(load_path=r"audio\spectograms", save_path=r"audio\ready
 
     np.save(os.path.join(save_path, "features"), np.array(data_set))
     np.save(os.path.join(save_path, "labels"), np.array(labs))
+    # print(labs)
     data_set = np.array(data_set)
     print(data_set.shape)
 
