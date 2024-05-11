@@ -68,9 +68,9 @@ def create_dataset(load, number_of_images, upper_limit=0):
     return data, lab
 
 
-def create_image_dataset(load_path=r"audio\spectograms", save_path=r"audio\ready_dataset"):
+def create_image_dataset(load_path=r"audio\spectograms", save_path=r"audio\ready_dataset", number_of_examples=99):
     upperlimit = 0
-    number_of_examples = 99
+    number_of_examples = number_of_examples
 
     try:
         os.mkdir(save_path)
