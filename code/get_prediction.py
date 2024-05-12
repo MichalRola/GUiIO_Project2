@@ -1,8 +1,4 @@
 import tensorflow as tf
-import sys
-from PIL import Image
-from numpy import asarray
-import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 
