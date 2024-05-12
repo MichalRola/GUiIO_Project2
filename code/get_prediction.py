@@ -6,6 +6,9 @@ import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 
+'''
+WYMAGANY tensorflow==2.15 to załadowania modelu
+'''
 
 model = tf.saved_model.load('./models/saved_model/MobileNet')
 image = plt.imread("code/Data/spectrograms/pop/00000(0).png")[:, :, 1]
