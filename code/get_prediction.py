@@ -1,8 +1,10 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 '''
+DZALAMY NA SYGNALACH AUDIO O DLUGOSCI 28 SEKUND
 WYMAGANY tensorflow==2.15 to załadowania modelu
 
 Link do wytrenowanych modeli:
@@ -21,7 +23,7 @@ image = np.transpose(image, (0, 2, 1, 3))
 
 labels = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
 
-pred = model(image) 
+pred = model(image)
 print(pred)
 
 print(labels[np.argmax(pred)])
