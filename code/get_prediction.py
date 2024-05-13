@@ -7,6 +7,9 @@ WYMAGANY tensorflow==2.15 to załadowania modelu
 
 Link do wytrenowanych modeli:
 https://drive.google.com/drive/folders/1OqRRcUV6otdt9Ynfwu7OgZ11JHahvS4Y?usp=drive_link
+
+Link do logów:
+https://drive.google.com/drive/folders/1qEjVXV-c2gv3BTmcR580F8YPZ5mPbaUS?usp=drive_link
 '''
 
 model = tf.saved_model.load('./models/saved_model/MobileNet')
