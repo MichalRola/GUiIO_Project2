@@ -4,7 +4,7 @@ import numpy as np
 
 from get_mfcc_for_one_file import get_mfcc_for_one_file, get_mfcc_stft_for_one_file
 
-
+#modele znajdują się pod linkiem: https://aghedupl-my.sharepoint.com/:f:/g/personal/pmamos_student_agh_edu_pl/EqU9cP9q_jRBuiR489nSu7MBm48MUUj7pxSA0Wy94y6plw?e=iT8kO8
 def get_prediction_mfcc(model_selector, path):
     if model_selector == 1:
         model = tf.keras.models.load_model('my_model.h5')
