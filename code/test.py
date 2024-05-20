@@ -64,7 +64,7 @@ for root, _, files in os.walk(input_folder):
                 print(model_id, model_name)
                 prediction = get_prediction_mfcc(model_id, output_path)
                 max_genre = genres[np.argmax(prediction)]
-                result = [filename, model_names] + prediction.tolist() + [max_genre]
+                result = [filename, model_name] + prediction.tolist() + [max_genre]
                 results.append(result)
 
 # Przygotowanie nagłówków dla kolumn
