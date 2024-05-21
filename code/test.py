@@ -15,7 +15,7 @@ from get_prediction_mfcc import get_prediction_mfcc
 # print(y_train2.shape)
 # print(y_train.shape)
 
-# get_prediction_mfcc(2, "Data/genres_original/metal/metal.00006.wav")
+# get_prediction_mfcc(2, "Data/genres_original/Metal/Metal.00006.wav")
 
 import os
 from pydub import AudioSegment
@@ -29,10 +29,10 @@ def change_suffix(filename):
     return os.path.splitext(filename)[0] + '.wav'
 
 # Ścieżki
-input_folder = 'GUiIO_utwory'
-save_path = r'audio\wave'
+input_folder = 'Data'
+save_path = r'Data'
 results = []
-genres = ["blues", "classical", "country", "disco", "hiphop", "jazz", "metal", "pop", "reggae", "rock"]
+genres = ["Blues", "Classical", "Country", "Disco", "HipHop", "Jazz", "Metal", "Pop", "Reggae", "Rock"]
 model_names = [
     "MFCC na spektogramie",
     "MFCC na STFT",
@@ -43,34 +43,39 @@ model_names = [
 # Przejście przez wszystkie pliki MP3 w podfolderach
 for root, _, files in os.walk(input_folder):
     for file in files:
-        if file.endswith('.mp3'):
+        if file.endswith('.mp3') or file.endswith('.wav'):
             # Pełna ścieżka do pliku wejściowego
             filename = os.path.join(root, file)
 
-            # Konwersja MP3 na WAV
-            sound = AudioSegment.from_mp3(filename)
-            new_filename = change_suffix(file)
+            if file.endswith('.mp3'):
+                # Konwersja MP3 na WAV
+                sound = AudioSegment.from_mp3(filename)
+                new_filename = change_suffix(file)
 
-            # Pełna ścieżka do zapisu pliku wyjściowego
-            output_folder = os.path.join(save_path, os.path.relpath(root, input_folder))
-            if not os.path.exists(output_folder):
-                os.makedirs(output_folder)
-            output_path = os.path.join(output_folder, new_filename)
+                # Pełna ścieżka do zapisu pliku wyjściowego
+                output_folder = os.path.join(save_path, os.path.relpath(root, input_folder))
+                if not os.path.exists(output_folder):
+                    os.makedirs(output_folder)
+                output_path = os.path.join(output_folder, new_filename)
 
-            # Eksport pliku WAV
-            sound.export(output_path, format="wav")
+                # Eksport pliku WAV
+                sound.export(output_path, format="wav")
+            else:
+                # Jeśli plik jest już WAV, użyjemy go bez konwersji
+                output_path = filename
 
-            for model_id, model_name in enumerate(model_names, 1):
-                print(model_id, model_name)
+            # Wywołanie funkcji predykcyjnych i zapis wyników dla każdego modelu
+            for model_id, model_name in enumerate(model_names,1):
+
                 prediction = get_prediction_mfcc(model_id, output_path)
                 max_genre = genres[np.argmax(prediction)]
                 result = [filename, model_name] + prediction.tolist() + [max_genre]
                 results.append(result)
 
 # Przygotowanie nagłówków dla kolumn
-genres = ["blues", "classical", "country", "disco", "hiphop", "jazz", "metal", "pop", "reggae", "rock"]
+genres = ["Blues", "Classical", "Country", "Disco", "HipHop", "Jazz", "Metal", "Pop", "Reggae", "Rock"]
 columns = ['Original File', 'Model'] + genres + ['Predicted Genre']
 
 # Zapis wyników do pliku Excel
 df = pd.DataFrame(results, columns=columns)
-df.to_excel('predictions.xlsx', index=False)
+df.to_excel('predictions_orginal.xlsx', index=False)
