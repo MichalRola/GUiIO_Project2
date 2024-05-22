@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys
+
 import os
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox
@@ -18,6 +19,7 @@ import datetime
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
+
 
 class TableModel(QAbstractTableModel):
     def __init__(self, data):
@@ -92,6 +94,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
 
         # Audio and player
         self.player = QMediaPlayer()
@@ -203,7 +206,6 @@ class MainWindow(QMainWindow):
         self.ui.graph.canvas.axes.set_xlabel("Liczba iteracji")
         self.ui.graph.canvas.axes.set_ylabel("Wartość najlepszego karalucha")
         self.ui.graph.canvas.draw()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

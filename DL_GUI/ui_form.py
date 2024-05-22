@@ -11,6 +11,7 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
+
 from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QCursor, QFont, QFontDatabase, QGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
@@ -27,6 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
+
         MainWindow.resize(1000, 600)
         MainWindow.setStyleSheet(u"")
         self.actionZapisz_do_Excela = QAction(MainWindow)
@@ -147,6 +149,7 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QRect(0, 0, 1000, 21))
         self.menuMENU = QMenu(self.menubar)
         self.menuMENU.setObjectName(u"menuMENU")
+
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -165,6 +168,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+
         self.actionZapisz_do_Excela.setText(QCoreApplication.translate("MainWindow", u"Zapisz do Excela", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Wynik rozpoznania:", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
