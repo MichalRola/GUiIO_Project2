@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" rowspan="2">
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0" rowspan="2" colspan="2">
+         <widget class="PlotWidget" name="graph" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>400</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QTableView" name="tableView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_2">
+       <layout class="QGridLayout" name="gridLayout_3"/>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QStackedWidget" name="stackedWidget_2">
+      <widget class="QWidget" name="page_3">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="1" colspan="8">
+         <widget class="QLineEdit" name="file_name">
+          <property name="styleSheet">
+           <string notr="true">border-color: rgb(0, 0, 0);</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="6">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Wynik rozpoznania:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="7" colspan="3">
+         <widget class="QLineEdit" name="predict_line"/>
+        </item>
+        <item row="3" column="6">
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="text">
+           <string>PushButton</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4" colspan="5">
+         <widget class="QSlider" name="slider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="play_btn">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>▶</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="9">
+         <widget class="QLabel" name="time_label">
+          <property name="text">
+           <string>0:00</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QPushButton" name="stop_btn">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>■</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="8">
+         <widget class="QLabel" name="label">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-color: rgb(0, 0, 0);</string>
+          </property>
+          <property name="text">
+           <string>Plik .mp3/.wav</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="9">
+         <widget class="QPushButton" name="file_btn">
+          <property name="text">
+           <string>Wybierz</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pause_btn">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>⏸︎</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="7" colspan="2">
+         <widget class="QPushButton" name="start_btn">
+          <property name="text">
+           <string>START</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_4"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuMENU">
+    <property name="title">
+     <string>MENU</string>
+    </property>
+    <addaction name="actionZapisz_do_Excela"/>
+   </widget>
+   <addaction name="menuMENU"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionZapisz_do_Excela">
+   <property name="text">
+    <string>Zapisz do Excela</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>plotwidget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
