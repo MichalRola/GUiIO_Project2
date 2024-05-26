@@ -100,7 +100,8 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-
+        self.setWindowTitle('Klasyfikator gatunków muzyki')
+        
         # Audio and player
         self.player = QMediaPlayer()
         self.audio = QAudioOutput()
@@ -118,23 +119,17 @@ class MainWindow(QMainWindow):
         self.ui.pause_btn.clicked.connect(self.pause_music)
         self.ui.stop_btn.clicked.connect(self.stop_music)
 
-        self.ui.graph.show()
-        self.update_graph()
-    
+        self.ui.graph.hide()
+        # self.update_graph()
 
-        data = [
-          [4, 9, 2],
-          [1, 0, 0],
-          [3, 5, 0],
-          [3, 3, 2],
-          [7, 8, 9],
-        ]
-
-        self.model = TableModel(data)
-        self.ui.tableView.setModel(self.model)
 
         self.fileName = None
         self.ui.start_btn.clicked.connect(self.start)
+        self.ui.icon.show()
+        self.ui.left_btn.hide()
+
+        self.ui.left_btn.clicked.connect(self.left_click)
+        self.ui.right_btn.clicked.connect(self.right_click)
 
 
     def runLongTask(self):
@@ -196,19 +191,47 @@ class MainWindow(QMainWindow):
 
     def slider_prog(self, n):
         self.ui.slider.setValue(self.ui.slider.value() + n)
+
+    def left_click(self):
+        self.ui.stackedWidget_2.setCurrentIndex(0)
+        self.ui.right_btn.show()
+        self.ui.left_btn.hide()
+
+    def right_click(self):
+        self.ui.stackedWidget_2.setCurrentIndex(1)
+        self.ui.right_btn.hide()
+        self.ui.left_btn.show()
     
     def start(self):
-        output = generate_heatmap_from_audio(
-                                # model_path="Model/MobileNet.h5",
-                                model_path="Model/my_model_28.h5",
-                                chunk_size=30,
-                                audio_path = self.fileName,
-                                save_spectogram_path = "Data/spectrograms/custom",
-                                is_model_mfcc = True)
-        
-        print(output)
-        
+        self.ui.icon.hide()
 
+        if self.ui.stackedWidget_2.currentIndex() == 0:
+            output, ret_img, all_pred, pred_num = generate_heatmap_from_audio(
+                                    model_path="Model/MobileNet.h5",
+                                    chunk_size=30,
+                                    audio_path = self.fileName,
+                                    save_spectogram_path = "Data/spectrograms/custom")
+        else:
+            output, ret_img, all_pred, pred_num = generate_heatmap_from_audio(
+                        model_path="Model/my_model_28.h5",
+                        chunk_size=30,
+                        audio_path = self.fileName,
+                        save_spectogram_path = "Data/spectrograms/custom")
+        
+        if ret_img is not None:
+            self.update_graph(ret_img)
+
+        self.ui.predict_line.setText(output)
+
+        all_boxes = [self.ui.blues, self.ui.classical, self.ui.country, self.ui.disco, self.ui.hiphop,
+                    self.ui.jazz, self.ui.metal, self.ui.pop, self.ui.reggae, self.ui.rock]
+        
+        for x in range(len(all_boxes)):
+            all_boxes[x].setText(all_pred[x])
+
+        self.ui.confidence_line.setText(pred_num)
+        
+        
 
 
     # def position_changed(self, position):
@@ -220,13 +243,14 @@ class MainWindow(QMainWindow):
     #     hours = (position/ 2600000) % 24
     #     time = QTime(hours, minutes, seconds)
     
-    def update_graph(self):
+    def update_graph(self, img):
         self.ui.graph.canvas.axes.clear()
-        self.ui.graph.canvas.axes.plot([1,2,3,4,5], [1,2,3,4,5])
-        # self.ui.graph.canvas.axes.scatter(vals.index(min(vals)), min(vals), facecolors='none', edgecolors='r')
-        self.ui.graph.canvas.axes.set_title('Rezultaty działania algorytmu CSO')
-        self.ui.graph.canvas.axes.set_xlabel("Liczba iteracji")
-        self.ui.graph.canvas.axes.set_ylabel("Wartość najlepszego karalucha")
+        self.ui.graph.show()
+        self.ui.graph.canvas.axes.imshow(img, aspect='auto')
+        self.ui.graph.canvas.axes.set_title('GradCAM')
+        self.ui.graph.canvas.axes.set_xlabel("Czas trwania")
+        self.ui.graph.canvas.axes.set_ylabel("Częstotliwość")
+        self.ui.graph.canvas.axes.figure.tight_layout()
         self.ui.graph.canvas.draw()
 
 if __name__ == "__main__":
