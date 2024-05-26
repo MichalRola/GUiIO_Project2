@@ -199,11 +199,12 @@ class MainWindow(QMainWindow):
     
     def start(self):
         output = generate_heatmap_from_audio(
-                                model_path="Model/MobileNet.h5",
+                                # model_path="Model/MobileNet.h5",
+                                model_path="Model/my_model_28.h5",
                                 chunk_size=30,
                                 audio_path = self.fileName,
                                 save_spectogram_path = "Data/spectrograms/custom",
-                                is_model_mfcc = False)
+                                is_model_mfcc = True)
         
         print(output)
         

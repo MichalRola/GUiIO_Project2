@@ -6,7 +6,7 @@ import os
 import librosa
 import gc
 
-from get_mfcc_for_one_file import get_mfcc_for_one_file
+from get_mfcc_for_one_file_28 import get_mfcc_for_one_file_28
 
 
 
@@ -59,8 +59,9 @@ def generate_heatmap_from_audio(model_path: str,
             gc.collect()
         del audio_timeseries
         gc.collect()
+        
     if is_model_mfcc:
-        mfcc = get_mfcc_for_one_file(audio_path)
+        mfcc = get_mfcc_for_one_file_28(audio_path)
     model = tf.keras.models.load_model(model_path)
 
     whole_audio_predictions = []
@@ -82,12 +83,24 @@ def generate_heatmap_from_audio(model_path: str,
             predicted_class_index = labels.index(prediction)
 
     else:
-        prediction = model.predict(mfcc)
+        print(mfcc)
+        predictions = model.predict(mfcc)
+        avg = np.mean(predictions, axis=0)
+        average_pred = np.mean(avg, axis=0)
+        print(np.argmax(average_pred))
+        print(predictions)
+        whole_audio_predictions.append(labels[np.argmax(average_pred)])
+        
+        unique, counts = np.unique(whole_audio_predictions, return_counts=True)
+        prediction = unique[np.argmax(counts)]
         predicted_class_index = labels.index(prediction)
     
-    print(predictions)
-    print(np.argmax(predictions))
-    print(labels[np.argmax(predictions)])
+    for label, probability in zip(labels, predictions[0]):
+         print(f"{label}: {probability:.4f}")
+
+    # print(predictions)
+    # print(np.argmax(predictions))
+    # print(labels[np.argmax(predictions)])
     # print(len(spectrograms))
 
     grad_model = tf.keras.models.Model([model.inputs], [model.get_layer('conv_pw_13_relu').output, model.output])
