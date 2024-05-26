@@ -29,8 +29,8 @@ def change_suffix(filename):
     return os.path.splitext(filename)[0] + '.wav'
 
 # Ścieżki
-input_folder = 'code\Data\GUiIO_wav'
-save_path = r'code\Data\GUiIO_wav'
+input_folder = 'code\Data\genres_original'
+save_path = r'code\Data\genres_original'
 results = []
 genres = ["Blues", "Classical", "Country", "Disco", "HipHop", "Jazz", "Metal", "Pop", "Reggae", "Rock"]
 model_names = [
@@ -75,4 +75,4 @@ columns = ['Original File', 'Model'] + genres + ['Predicted Genre']
 
 # Zapis wyników do pliku Excel
 df = pd.DataFrame(results, columns=columns)
-df.to_excel('predictions_David.xlsx', index=False)
+df.to_excel('predictions_origin.xlsx', index=False)
