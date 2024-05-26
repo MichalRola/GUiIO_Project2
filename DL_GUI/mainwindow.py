@@ -3,6 +3,9 @@ import sys
 
 import os
 
+sys.path.append("./code")
+
+from process_flow import *
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtCore import QUrl, QAbstractTableModel, Qt, QThread, Signal, QObject, QTime
@@ -13,6 +16,7 @@ import librosa
 import time
 import datetime
 # import pandas as pd
+
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -54,6 +58,7 @@ class TableModel(QAbstractTableModel):
         # The following takes the first sub-list, and returns
         # the length (only works if all rows are an equal length)
         return len(self._data[0])
+    
 
 class Worker(QObject):
     finished = Signal()
@@ -128,6 +133,9 @@ class MainWindow(QMainWindow):
         self.model = TableModel(data)
         self.ui.tableView.setModel(self.model)
 
+        self.fileName = None
+        self.ui.start_btn.clicked.connect(self.start)
+
 
     def runLongTask(self):
         # Step 2: Create a QThread object
@@ -158,9 +166,9 @@ class MainWindow(QMainWindow):
         )
         if str(response[0]):
             self.ui.file_name.setText(str(response[0]))
-            fileName = self.ui.file_name.text()
-            if fileName != '':
-                self.player.setSource(fileName)
+            self.fileName = self.ui.file_name.text()
+            if self.fileName != '':
+                self.player.setSource(self.fileName)
                 self.ui.play_btn.setEnabled(True)
                 time = librosa.get_duration(path=str(response[0]))
                 print(time)
@@ -188,6 +196,19 @@ class MainWindow(QMainWindow):
 
     def slider_prog(self, n):
         self.ui.slider.setValue(self.ui.slider.value() + n)
+    
+    def start(self):
+        output = generate_heatmap_from_audio(
+                                model_path="Model/MobileNet.h5",
+                                chunk_size=30,
+                                audio_path = self.fileName,
+                                save_spectogram_path = "Data/spectrograms/custom",
+                                is_model_mfcc = False)
+        
+        print(output)
+        
+
+
 
     # def position_changed(self, position):
     #     if self.ui.slider.maximum() != self.player.duration():

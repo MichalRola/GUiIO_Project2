@@ -9,6 +9,7 @@ import gc
 from get_mfcc_for_one_file import get_mfcc_for_one_file
 
 
+
 def load_image(path):
     image = plt.imread(path)[:, :, 1]
 
@@ -20,17 +21,27 @@ def load_image(path):
 
 def generate_heatmap_from_audio(model_path: str,
                                 chunk_size,
-                                audio_path: str = "Data\genres_original",
-                                save_spectogram_path: str = "Data\spectrograms\custom",
-                                sample_length: int = 30,
-                                is_model_mfcc: bool = False):
+                                audio_path: str = "Data/genres_original",
+                                save_spectogram_path: str = "Data/spectrograms/custom",
+                                is_model_mfcc: bool = False,
+                                sample_length = 28):
 
     mfcc = None
     SAMPLING_RATE = 44100  # 44.1 kHz is a "standard" sampling rate.
+
+    length_of_sample = sample_length  # Sample length in seconds.
+    chunk_size = int(length_of_sample * SAMPLING_RATE)  # C
+
     counter = 0
     audio_timeseries, sampling_rate = librosa.load(audio_path, sr=SAMPLING_RATE, mono=True)
     sound_end = len(audio_timeseries)
     no_of_chunks = sound_end // chunk_size
+
+    print(audio_timeseries)
+    print(sampling_rate)
+    print(no_of_chunks)
+    print(sound_end)
+
     if no_of_chunks != 0:
         for j in range(no_of_chunks):
             chunk_start = j * chunk_size
@@ -43,7 +54,7 @@ def generate_heatmap_from_audio(model_path: str,
             new_file_name = "spectrogram" + "(" + str(counter) + ").png"
             counter += 1
 
-            plt.imsave(os.path.join(save_spectogram_path, new_file_name), spectrogram, cmap='gray')
+            plt.imsave(save_spectogram_path + r"/" + new_file_name, spectrogram, cmap='gray')
             del spectrogram
             gc.collect()
         del audio_timeseries
