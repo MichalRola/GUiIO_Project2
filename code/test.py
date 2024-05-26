@@ -29,16 +29,13 @@ def change_suffix(filename):
     return os.path.splitext(filename)[0] + '.wav'
 
 # Ścieżki
-input_folder = 'Data'
-save_path = r'Data'
+input_folder = 'code\Data\GUiIO_wav'
+save_path = r'code\Data\GUiIO_wav'
 results = []
 genres = ["Blues", "Classical", "Country", "Disco", "HipHop", "Jazz", "Metal", "Pop", "Reggae", "Rock"]
 model_names = [
-    "MFCC na spektogramie",
-    "MFCC na STFT",
-    "MFCC",
     "MFCC na spektogramie dla 28 sekund",
-    "MFCC na STFT na 28 sekund"
+    "Ten lepszy model spec"
 ]
 # Przejście przez wszystkie pliki MP3 w podfolderach
 for root, _, files in os.walk(input_folder):

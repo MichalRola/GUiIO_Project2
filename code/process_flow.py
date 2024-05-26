@@ -84,11 +84,16 @@ def generate_heatmap_from_audio(model_path: str,
     else:
         prediction = model.predict(mfcc)
         predicted_class_index = labels.index(prediction)
+    
+    print(predictions)
+    print(np.argmax(predictions))
+    print(labels[np.argmax(predictions)])
+    # print(len(spectrograms))
 
     grad_model = tf.keras.models.Model([model.inputs], [model.get_layer('conv_pw_13_relu').output, model.output])
 
     # generating example gradient from one of spectrograms
-    spectrogram = spectrograms[int(len(spectrograms))]
+    spectrogram = spectrograms[int(len(spectrograms))-1]
     img_array = load_image(os.path.join(save_spectogram_path, spectrogram))
     with tf.GradientTape() as tape:
         conv_output, predictions = grad_model(img_array)
