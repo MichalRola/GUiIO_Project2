@@ -42,10 +42,19 @@ def get_spectogram_for_one_file(path, sample_length=28):
             audio_chunk = audio_timeseries[chunk_start: chunk_end]
             spectrogram = librosa.feature.melspectrogram(y=audio_chunk, sr=sampling_rate)
             spectrogram = librosa.power_to_db(spectrogram)
-            image = np.repeat(spectrogram[:, :, np.newaxis], 3, axis=2)
+            plt.imsave("aha.png", spectrogram, cmap='gray')
+
+            image = plt.imread("aha.png")[:, :, 1]
+            
+            image = np.repeat(image[:, :, np.newaxis], 3, axis=2)
             image = np.expand_dims(image, axis=0)
             image = np.transpose(image, (0, 2, 1, 3))
+
+            # plt.imshow(image[0])
+            # plt.show()
+
             spec.append(image)
+            # break
             # new_file_name = "spectrogram" + "(" + str(counter) + ").png"
             # counter += 1
 

@@ -75,4 +75,4 @@ columns = ['Original File', 'Model'] + genres + ['Predicted Genre']
 
 # Zapis wyników do pliku Excel
 df = pd.DataFrame(results, columns=columns)
-df.to_excel('predictions_orginal.xlsx', index=False)
+df.to_excel('predictions_David.xlsx', index=False)
