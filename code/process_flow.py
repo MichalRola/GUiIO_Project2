@@ -5,6 +5,7 @@ import cv2
 import os
 import librosa
 import gc
+import glob
 
 from get_mfcc_for_one_file_28 import get_mfcc_for_one_file_28, get_mfcc_stft_for_one_file_28
 
@@ -136,6 +137,11 @@ def generate_heatmap_from_audio(model_path: str,
     for label, probability in zip(labels, predictions[0]):
          print(f"{label}: {probability*100:.4f} %")
          all_pred.append(f"{probability*100:.4f} %")
+
+    # Clear spectrograms directory
+    files = glob.glob(save_spectogram_path + "/*")
+    for f in files:
+        os.remove(f)
     
 
     return prediction, ret, all_pred, '0'
