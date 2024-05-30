@@ -410,7 +410,7 @@ class Ui_MainWindow(object):
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"MODEL MFCC", None))
         self.icon.setText(QCoreApplication.translate("MainWindow", u"\u266c", None))
         self.groupBox_2.setTitle("")
-        self.time_label.setText(QCoreApplication.translate("MainWindow", u"0:00", None))
+        self.time_label.setText(QCoreApplication.translate("MainWindow", u"00:00", None))
         self.pause_btn.setText(QCoreApplication.translate("MainWindow", u"\u23f8\ufe0e", None))
         self.stop_btn.setText(QCoreApplication.translate("MainWindow", u"\u25a0", None))
         self.play_btn.setText(QCoreApplication.translate("MainWindow", u"\u25b6", None))

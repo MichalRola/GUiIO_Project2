@@ -25,73 +25,38 @@ import datetime
 from ui_form import Ui_MainWindow
 
 
-class TableModel(QAbstractTableModel):
-    def __init__(self, data):
-        super(TableModel, self).__init__()
-        self._data = data
- 
-    def data(self, index, role):
- 
-        if role == Qt.DisplayRole:
-            #return self._data[index.row()][index.column()]
-            value = self._data[index.row()][index.column()]
- 
-            if index.column() == 2:    # Betrag
-                return "%.1f" % float(value)
-            else:
-                return value
- 
-        if role == Qt.TextAlignmentRole:
-            value = self._data[index.row()][index.column()]
- 
-            if index.column() == 0 or index.column() == 2:   # ID, Betrag
-                return Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight
-            else:
-                return Qt.AlignmentFlag.AlignVCenter
- 
- 
-    def rowCount(self, index):
-        # The length of the outer list.
-        return len(self._data)
- 
-    def columnCount(self, index):
-        # The following takes the first sub-list, and returns
-        # the length (only works if all rows are an equal length)
-        return len(self._data[0])
+# class Worker(QObject):
+#     finished = Signal()
+#     progress = Signal(int)
+
+#     def __init__(self):
+#         super().__init__()
+#         self.i = 0
+#         self.stop_flag = False
+#         self.pause_flag = False
+
+#     def run(self):
+#         """Long-running task."""
+
+#         while self.i < 60:
+#             if not self.stop_flag:
+#                 if not self.pause_flag:
+#                     time.sleep(1)
+#                     self.i += 1
+#                     self.progress.emit(self.i)
+#                 else:
+#                     break
+#             else:
+#                 self.finished.emit()
+#                 break
+#         if self.i == 60:
+#             self.finished.emit()
     
+#     def stop(self):
+#         self.stop_flag = True
 
-class Worker(QObject):
-    finished = Signal()
-    progress = Signal(int)
-
-    def __init__(self):
-        super().__init__()
-        self.i = 0
-        self.stop_flag = False
-        self.pause_flag = False
-
-    def run(self):
-        """Long-running task."""
-
-        while self.i < 60:
-            if not self.stop_flag:
-                if not self.pause_flag:
-                    time.sleep(1)
-                    self.i += 1
-                    self.progress.emit(self.i)
-                else:
-                    break
-            else:
-                self.finished.emit()
-                break
-        if self.i == 60:
-            self.finished.emit()
-    
-    def stop(self):
-        self.stop_flag = True
-
-    def pause(self):
-        self.pause_flag = True
+#     def pause(self):
+#         self.pause_flag = True
 
 
 class MainWindow(QMainWindow):
@@ -105,9 +70,12 @@ class MainWindow(QMainWindow):
         # Audio and player
         self.player = QMediaPlayer()
         self.audio = QAudioOutput()
-
         self.player.setAudioOutput(self.audio)
+        
+        self.player.durationChanged.connect(self.duration_changed)
         self.ui.play_btn.setEnabled(False)
+        self.player.positionChanged.connect(self.position_changed)
+        self.ui.slider.sliderMoved.connect(self.play_slider_changed)
 
         # Pages
         self.ui.stackedWidget.setCurrentIndex(0)
@@ -120,8 +88,6 @@ class MainWindow(QMainWindow):
         self.ui.stop_btn.clicked.connect(self.stop_music)
 
         self.ui.graph.hide()
-        # self.update_graph()
-
 
         self.fileName = None
         self.ui.start_btn.clicked.connect(self.start)
@@ -132,27 +98,27 @@ class MainWindow(QMainWindow):
         self.ui.right_btn.clicked.connect(self.right_click)
 
 
-    def runLongTask(self):
-        # Step 2: Create a QThread object
-        self.thread = QThread()
-        # Step 3: Create a worker object
-        self.worker = Worker()
-        # Step 4: Move worker to the thread
-        self.worker.moveToThread(self.thread)
-        # Step 5: Connect signals and slots
-        self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress.connect(self.reportProgress)
-        self.worker.progress.connect(self.slider_prog)
-        # Step 6: Start the thread
-        self.thread.start()
+    # def runLongTask(self):
+    #     # Step 2: Create a QThread object
+    #     self.thread = QThread()
+    #     # Step 3: Create a worker object
+    #     self.worker = Worker()
+    #     # Step 4: Move worker to the thread
+    #     self.worker.moveToThread(self.thread)
+    #     # Step 5: Connect signals and slots
+    #     self.thread.started.connect(self.worker.run)
+    #     self.worker.finished.connect(self.thread.quit)
+    #     self.worker.finished.connect(self.worker.deleteLater)
+    #     self.thread.finished.connect(self.thread.deleteLater)
+    #     self.worker.progress.connect(self.reportProgress)
+    #     self.worker.progress.connect(self.slider_prog)
+    #     # Step 6: Start the thread
+    #     self.thread.start()
 
-        # Final resets
-        self.thread.finished.connect(
-            lambda: self.ui.time_label.setText("00:00")
-        )
+    #     # Final resets
+    #     self.thread.finished.connect(
+    #         lambda: self.ui.time_label.setText("00:00")
+    #     )
 
     def getFileName(self):
 
@@ -171,20 +137,21 @@ class MainWindow(QMainWindow):
                 print(self.ui.slider.maximum())
                 # self.ui.time_label.setText(librosa.get_duration(filename=fileName))
 
+    def duration_changed(self, duration):
+        self.ui.slider.setRange(0, duration)
 
     def play_music(self):
-        print(self.player.playbackState())
         self.player.play()
-        self.runLongTask()    
+        # self.runLongTask()    
     
     def pause_music(self):
         self.player.pause()
-        self.worker.pause()
+        # self.worker.pause()
 
     def stop_music(self):
         self.player.stop()
-        self.thread.exit()
-        self.worker.stop()
+        # self.thread.exit()
+        # self.worker.stop()
     
     def reportProgress(self, n):
         self.ui.time_label.setText(str(datetime.timedelta(seconds=n))[2:])
@@ -232,16 +199,18 @@ class MainWindow(QMainWindow):
         self.ui.confidence_line.setText(pred_num)
         
         
-
-
-    # def position_changed(self, position):
-    #     if self.ui.slider.maximum() != self.player.duration():
-    #         self.ui.slider.setMaximum(self.player.duration())
-    #     self.ui.slider.setValue(position)        
-    #     seconds = (position/1000) % 60
-    #     minutes = (position/ 60000) % 60
-    #     hours = (position/ 2600000) % 24
-    #     time = QTime(hours, minutes, seconds)
+    def position_changed(self, position):
+        if self.ui.slider.maximum() != self.player.duration():
+            self.ui.slider.setMaximum(self.player.duration())
+        self.ui.slider.setValue(position)        
+        seconds = (position/1000) % 60
+        minutes = (position/ 60000) % 60
+        hours = (position/ 2600000) % 24
+        time = QTime(hours, minutes, seconds)
+        self.ui.time_label.setText(time.toString()[3:])
+    
+    def play_slider_changed(self, position):
+        self.player.setPosition(position)
     
     def update_graph(self, img):
         self.ui.graph.canvas.axes.clear()
