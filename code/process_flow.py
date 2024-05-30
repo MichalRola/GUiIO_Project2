@@ -6,8 +6,7 @@ import os
 import librosa
 import gc
 
-from get_mfcc_for_one_file_28 import get_mfcc_for_one_file_28
-
+from get_mfcc_for_one_file_28 import get_mfcc_for_one_file_28, get_mfcc_stft_for_one_file_28
 
 
 def load_image(path):
@@ -112,8 +111,22 @@ def generate_heatmap_from_audio(model_path: str,
         predictions = model.predict(mfcc)
         avg = np.mean(predictions, axis=0)
         average_pred = np.mean(avg, axis=0)
-
-        whole_audio_predictions.append(labels[np.argmax(average_pred)])
+        predicted_label = labels[np.argmax(average_pred)]
+        if predicted_label == "rock":
+            mfcc_stft = get_mfcc_stft_for_one_file_28(audio_path)
+            model_stft = tf.keras.models.load_model('..\Model\my_model_stft_28.h5')
+            pred_stft = model_stft.predict(mfcc_stft)
+            avg_stft = np.mean(pred_stft, axis=0)
+            average_pred_stft = np.mean(avg_stft, axis=0)
+            predicted_label_stft = labels[np.argmax(average_pred_stft)]
+            if predicted_label_stft == "metal":
+                mfcc = mfcc_stft
+                model = model_stft
+                predictions = pred_stft
+                avg = avg_stft
+                average_pred = average_pred_stft
+                predicted_label = predicted_label_stft
+        whole_audio_predictions.append(predicted_label)
         
         unique, counts = np.unique(whole_audio_predictions, return_counts=True)
         prediction = unique[np.argmax(counts)]
