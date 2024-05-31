@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         self.label_new.setGeometry(200,70,400,300)
         self.label_new.setFont(QFont('Segoe UI', 200))
         self.label_new.show()
+        self.ui.warning.hide()
 
     def getFileName(self):
         self.player.stop()
@@ -79,10 +80,19 @@ class MainWindow(QMainWindow):
             self.fileName = self.ui.file_name.text()
             if self.fileName != '':
                 self.player.setSource(self.fileName)
-                self.ui.play_btn.setEnabled(True)
-                self.ui.start_btn.setEnabled(True)
+                for x in [self.ui.blues, self.ui.classical, self.ui.country, self.ui.disco, self.ui.hiphop,
+                          self.ui.jazz, self.ui.metal, self.ui.pop, self.ui.reggae, self.ui.rock]:
+                    x.setText("")
+                self.ui.predict_line.setText("")
+                self.ui.confidence_line.setText("")
+
                 time = librosa.get_duration(path=str(response[0]))
                 print(time)
+                self.ui.play_btn.setEnabled(True)
+                if time < 28:
+                    self.ui.warning.setText("Uwaga! Plik krótszy niż 28 sekund!")
+                else:
+                    self.ui.start_btn.setEnabled(True)
                 self.ui.slider.setMaximum(int(time))
                 print(self.ui.slider.maximum())
                 
