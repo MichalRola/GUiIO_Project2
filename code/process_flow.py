@@ -63,7 +63,7 @@ def generate_heatmap_from_audio(model_path: str,
     model = tf.keras.models.load_model(model_path)
 
     whole_audio_predictions = []
-    labels = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
+    labels = ['blues', 'klasyczna', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
     spectrograms = os.listdir(save_spectogram_path)
 
     prediction = None
@@ -104,9 +104,6 @@ def generate_heatmap_from_audio(model_path: str,
         overlay_img = cv2.addWeighted(img, 0.7, heatmap, 0.3, 0)
 
         ret = cv2.cvtColor(overlay_img, cv2.COLOR_BGR2RGB)
-        # plt.imshow(cv2.cvtColor(overlay_img, cv2.COLOR_BGR2RGB), aspect='auto')
-        # plt.axis('off')
-        # plt.show()
 
     else:
         predictions = model.predict(mfcc)
@@ -135,8 +132,11 @@ def generate_heatmap_from_audio(model_path: str,
         ret = None
     
     for label, probability in zip(labels, predictions[0]):
+         if max(predictions[0]) == probability:
+             pred = label
          print(f"{label}: {probability*100:.4f} %")
          all_pred.append(f"{probability*100:.4f} %")
+    maxi = max(predictions[0])
 
     # Clear spectrograms directory
     files = glob.glob(save_spectogram_path + "/*")
@@ -144,4 +144,4 @@ def generate_heatmap_from_audio(model_path: str,
         os.remove(f)
     
 
-    return prediction, ret, all_pred, '0'
+    return pred, ret, all_pred, f"{maxi*100:.4f} %"

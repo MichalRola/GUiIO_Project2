@@ -6,16 +6,14 @@ import os
 sys.path.append("./code")
 
 from process_flow import *
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
-from PySide6.QtCore import QUrl, QAbstractTableModel, Qt, QThread, Signal, QObject, QTime
+from PySide6.QtCore import QTime
+from PySide6.QtGui import QFont
 
 import matplotlib.pyplot as plt
-import numpy as np
 import librosa
-import time
 import datetime
-# import pandas as pd
 
 
 # Important:
@@ -23,40 +21,6 @@ import datetime
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
-
-
-# class Worker(QObject):
-#     finished = Signal()
-#     progress = Signal(int)
-
-#     def __init__(self):
-#         super().__init__()
-#         self.i = 0
-#         self.stop_flag = False
-#         self.pause_flag = False
-
-#     def run(self):
-#         """Long-running task."""
-
-#         while self.i < 60:
-#             if not self.stop_flag:
-#                 if not self.pause_flag:
-#                     time.sleep(1)
-#                     self.i += 1
-#                     self.progress.emit(self.i)
-#                 else:
-#                     break
-#             else:
-#                 self.finished.emit()
-#                 break
-#         if self.i == 60:
-#             self.finished.emit()
-    
-#     def stop(self):
-#         self.stop_flag = True
-
-#     def pause(self):
-#         self.pause_flag = True
 
 
 class MainWindow(QMainWindow):
@@ -74,6 +38,9 @@ class MainWindow(QMainWindow):
         
         self.player.durationChanged.connect(self.duration_changed)
         self.ui.play_btn.setEnabled(False)
+        self.ui.stop_btn.setEnabled(False)
+        self.ui.pause_btn.setEnabled(False)
+        self.ui.start_btn.setEnabled(False)
         self.player.positionChanged.connect(self.position_changed)
         self.ui.slider.sliderMoved.connect(self.play_slider_changed)
 
@@ -91,37 +58,19 @@ class MainWindow(QMainWindow):
 
         self.fileName = None
         self.ui.start_btn.clicked.connect(self.start)
-        self.ui.icon.show()
+        
         self.ui.left_btn.hide()
 
         self.ui.left_btn.clicked.connect(self.left_click)
         self.ui.right_btn.clicked.connect(self.right_click)
 
-
-    # def runLongTask(self):
-    #     # Step 2: Create a QThread object
-    #     self.thread = QThread()
-    #     # Step 3: Create a worker object
-    #     self.worker = Worker()
-    #     # Step 4: Move worker to the thread
-    #     self.worker.moveToThread(self.thread)
-    #     # Step 5: Connect signals and slots
-    #     self.thread.started.connect(self.worker.run)
-    #     self.worker.finished.connect(self.thread.quit)
-    #     self.worker.finished.connect(self.worker.deleteLater)
-    #     self.thread.finished.connect(self.thread.deleteLater)
-    #     self.worker.progress.connect(self.reportProgress)
-    #     self.worker.progress.connect(self.slider_prog)
-    #     # Step 6: Start the thread
-    #     self.thread.start()
-
-    #     # Final resets
-    #     self.thread.finished.connect(
-    #         lambda: self.ui.time_label.setText("00:00")
-    #     )
+        self.label_new = QLabel("♬", self)
+        self.label_new.setGeometry(200,70,400,300)
+        self.label_new.setFont(QFont('Segoe UI', 200))
+        self.label_new.show()
 
     def getFileName(self):
-
+        self.player.stop()
         response = QFileDialog.getOpenFileName(
             self, 'Select a data file', os.getcwd(),"Sound Files (*.mp3 *.wav )"
         )
@@ -131,28 +80,34 @@ class MainWindow(QMainWindow):
             if self.fileName != '':
                 self.player.setSource(self.fileName)
                 self.ui.play_btn.setEnabled(True)
+                self.ui.start_btn.setEnabled(True)
                 time = librosa.get_duration(path=str(response[0]))
                 print(time)
                 self.ui.slider.setMaximum(int(time))
                 print(self.ui.slider.maximum())
-                # self.ui.time_label.setText(librosa.get_duration(filename=fileName))
+                
 
     def duration_changed(self, duration):
         self.ui.slider.setRange(0, duration)
 
     def play_music(self):
-        self.player.play()
-        # self.runLongTask()    
+        self.player.play()  
+        self.ui.play_btn.setEnabled(False)
+        self.ui.stop_btn.setEnabled(True)
+        self.ui.pause_btn.setEnabled(True)
     
     def pause_music(self):
         self.player.pause()
-        # self.worker.pause()
+        self.ui.play_btn.setEnabled(True)
+        self.ui.stop_btn.setEnabled(True)
+        self.ui.pause_btn.setEnabled(False)
 
     def stop_music(self):
         self.player.stop()
-        # self.thread.exit()
-        # self.worker.stop()
-    
+        self.ui.play_btn.setEnabled(True)
+        self.ui.stop_btn.setEnabled(False)
+        self.ui.pause_btn.setEnabled(False)
+
     def reportProgress(self, n):
         self.ui.time_label.setText(str(datetime.timedelta(seconds=n))[2:])
 
@@ -170,7 +125,7 @@ class MainWindow(QMainWindow):
         self.ui.left_btn.show()
     
     def start(self):
-        self.ui.icon.hide()
+        self.label_new.hide()
 
         if self.ui.stackedWidget_2.currentIndex() == 0:
             output, ret_img, all_pred, pred_num = generate_heatmap_from_audio(

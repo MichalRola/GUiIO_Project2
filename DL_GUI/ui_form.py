@@ -22,12 +22,16 @@ from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QGroupBox,
     QStatusBar, QWidget)
 
 from plotwidget import PlotWidget
+import rc_icons
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1000, 700)
+        icon = QIcon()
+        icon.addFile(u":/icons/Icons/main.png", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet(u"")
         self.actionZapisz_do_Excela = QAction(MainWindow)
         self.actionZapisz_do_Excela.setObjectName(u"actionZapisz_do_Excela")
@@ -35,18 +39,182 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.predict_line = QLineEdit(self.centralwidget)
-        self.predict_line.setObjectName(u"predict_line")
-        self.predict_line.setMaximumSize(QSize(200, 16777215))
-        self.predict_line.setReadOnly(True)
+        self.confidence_line = QLineEdit(self.centralwidget)
+        self.confidence_line.setObjectName(u"confidence_line")
+        self.confidence_line.setMaximumSize(QSize(120, 16777215))
+        self.confidence_line.setStyleSheet(u"border: 1px solid black;")
+        self.confidence_line.setReadOnly(True)
 
-        self.gridLayout.addWidget(self.predict_line, 6, 2, 1, 1)
+        self.gridLayout.addWidget(self.confidence_line, 6, 9, 1, 1)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer_3, 6, 4, 1, 2)
+
+        self.right_btn = QPushButton(self.centralwidget)
+        self.right_btn.setObjectName(u"right_btn")
+        self.right_btn.setStyleSheet(u"border:none;")
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/Icons/right.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.right_btn.setIcon(icon1)
+        self.right_btn.setIconSize(QSize(40, 20))
+
+        self.gridLayout.addWidget(self.right_btn, 4, 11, 1, 1)
+
+        self.stackedWidget = QStackedWidget(self.centralwidget)
+        self.stackedWidget.setObjectName(u"stackedWidget")
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.gridLayout_4 = QGridLayout(self.page)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.graph = PlotWidget(self.page)
+        self.graph.setObjectName(u"graph")
+        self.graph.setMinimumSize(QSize(0, 300))
+
+        self.gridLayout_4.addWidget(self.graph, 1, 1, 1, 1)
+
+        self.stackedWidget.addWidget(self.page)
+        self.page_2 = QWidget()
+        self.page_2.setObjectName(u"page_2")
+        self.gridLayout_3 = QGridLayout(self.page_2)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.stackedWidget.addWidget(self.page_2)
+
+        self.gridLayout.addWidget(self.stackedWidget, 0, 0, 5, 9)
+
+        self.groupBox_2 = QGroupBox(self.centralwidget)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setMinimumSize(QSize(0, 200))
+        self.gridLayout_6 = QGridLayout(self.groupBox_2)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.slider = QSlider(self.groupBox_2)
+        self.slider.setObjectName(u"slider")
+        self.slider.setMinimumSize(QSize(250, 0))
+        self.slider.setOrientation(Qt.Horizontal)
+
+        self.gridLayout_6.addWidget(self.slider, 2, 4, 1, 8)
+
+        self.pause_btn = QPushButton(self.groupBox_2)
+        self.pause_btn.setObjectName(u"pause_btn")
+        self.pause_btn.setMaximumSize(QSize(50, 16777215))
+        self.pause_btn.setStyleSheet(u"border: 0px;")
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/Icons/pause.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.pause_btn.setIcon(icon2)
+        self.pause_btn.setIconSize(QSize(20, 40))
+
+        self.gridLayout_6.addWidget(self.pause_btn, 2, 2, 1, 1)
+
+        self.play_btn = QPushButton(self.groupBox_2)
+        self.play_btn.setObjectName(u"play_btn")
+        self.play_btn.setMaximumSize(QSize(50, 16777215))
+        self.play_btn.setStyleSheet(u"border: 0px;")
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/Icons/play.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.play_btn.setIcon(icon3)
+        self.play_btn.setIconSize(QSize(20, 20))
+
+        self.gridLayout_6.addWidget(self.play_btn, 2, 1, 1, 1)
+
+        self.label = QLabel(self.groupBox_2)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(0, 30))
+        self.label.setMaximumSize(QSize(16777215, 30))
+
+        self.gridLayout_6.addWidget(self.label, 0, 1, 1, 12)
+
+        self.file_name = QLineEdit(self.groupBox_2)
+        self.file_name.setObjectName(u"file_name")
+        self.file_name.setStyleSheet(u"border: 1px solid black;")
+
+        self.gridLayout_6.addWidget(self.file_name, 1, 1, 1, 10)
+
+        self.file_btn = QPushButton(self.groupBox_2)
+        self.file_btn.setObjectName(u"file_btn")
+        self.file_btn.setStyleSheet(u"\n"
+"QPushButton {\n"
+"            border: 1px solid black;\n"
+"            padding: 5px;\n"
+"            border-radius: 10px;\n"
+"        }\n"
+"\n"
+"QPushButton::hover {\n"
+"            background-color: rgb(220, 220, 220)\n"
+"        }")
+
+        self.gridLayout_6.addWidget(self.file_btn, 1, 11, 1, 1)
+
+        self.time_label = QLabel(self.groupBox_2)
+        self.time_label.setObjectName(u"time_label")
+
+        self.gridLayout_6.addWidget(self.time_label, 2, 12, 1, 1)
+
+        self.stop_btn = QPushButton(self.groupBox_2)
+        self.stop_btn.setObjectName(u"stop_btn")
+        self.stop_btn.setMaximumSize(QSize(24, 24))
+        self.stop_btn.setStyleSheet(u"border: 0px;")
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/Icons/stop.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.stop_btn.setIcon(icon4)
+        self.stop_btn.setIconSize(QSize(42, 42))
+        self.stop_btn.setFlat(False)
+
+        self.gridLayout_6.addWidget(self.stop_btn, 2, 3, 1, 1)
+
+
+        self.gridLayout.addWidget(self.groupBox_2, 0, 9, 3, 3)
 
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setMaximumSize(QSize(10000, 60))
 
         self.gridLayout.addWidget(self.label_2, 6, 1, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer_2, 6, 10, 1, 2)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer, 6, 0, 1, 1)
+
+        self.start_btn = QPushButton(self.centralwidget)
+        self.start_btn.setObjectName(u"start_btn")
+        self.start_btn.setStyleSheet(u"\n"
+"QPushButton {\n"
+"            border: 1px solid black;\n"
+"            padding: 10px;\n"
+"            border-radius: 10px;\n"
+"        }\n"
+"\n"
+"QPushButton::hover {\n"
+"            background-color: rgb(220, 220, 220);\n"
+"        }")
+
+        self.gridLayout.addWidget(self.start_btn, 4, 10, 1, 1)
+
+        self.predict_line = QLineEdit(self.centralwidget)
+        self.predict_line.setObjectName(u"predict_line")
+        self.predict_line.setMaximumSize(QSize(200, 16777215))
+        self.predict_line.setStyleSheet(u"border: 1px solid black;")
+        self.predict_line.setReadOnly(True)
+
+        self.gridLayout.addWidget(self.predict_line, 6, 2, 1, 1)
+
+        self.label_16 = QLabel(self.centralwidget)
+        self.label_16.setObjectName(u"label_16")
+
+        self.gridLayout.addWidget(self.label_16, 6, 8, 1, 1)
+
+        self.left_btn = QPushButton(self.centralwidget)
+        self.left_btn.setObjectName(u"left_btn")
+        self.left_btn.setStyleSheet(u"border: none;")
+        icon5 = QIcon()
+        icon5.addFile(u":/icons/Icons/left.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.left_btn.setIcon(icon5)
+        self.left_btn.setIconSize(QSize(40, 20))
+
+        self.gridLayout.addWidget(self.left_btn, 4, 9, 1, 1)
 
         self.groupBox = QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(u"groupBox")
@@ -56,6 +224,7 @@ class Ui_MainWindow(object):
         self.metal = QLineEdit(self.groupBox)
         self.metal.setObjectName(u"metal")
         self.metal.setFocusPolicy(Qt.NoFocus)
+        self.metal.setStyleSheet(u"border: 1px solid black;")
         self.metal.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.metal, 1, 11, 1, 1)
@@ -68,6 +237,7 @@ class Ui_MainWindow(object):
         self.pop = QLineEdit(self.groupBox)
         self.pop.setObjectName(u"pop")
         self.pop.setFocusPolicy(Qt.NoFocus)
+        self.pop.setStyleSheet(u"border: 1px solid black;")
         self.pop.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.pop, 2, 11, 1, 1)
@@ -99,6 +269,7 @@ class Ui_MainWindow(object):
         self.disco = QLineEdit(self.groupBox)
         self.disco.setObjectName(u"disco")
         self.disco.setFocusPolicy(Qt.NoFocus)
+        self.disco.setStyleSheet(u"border: 1px solid black;")
         self.disco.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.disco, 2, 4, 1, 1)
@@ -121,6 +292,7 @@ class Ui_MainWindow(object):
         self.reggae = QLineEdit(self.groupBox)
         self.reggae.setObjectName(u"reggae")
         self.reggae.setFocusPolicy(Qt.NoFocus)
+        self.reggae.setStyleSheet(u"border: 1px solid black;")
         self.reggae.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.reggae, 1, 14, 1, 1)
@@ -128,6 +300,7 @@ class Ui_MainWindow(object):
         self.jazz = QLineEdit(self.groupBox)
         self.jazz.setObjectName(u"jazz")
         self.jazz.setFocusPolicy(Qt.NoFocus)
+        self.jazz.setStyleSheet(u"border: 1px solid black;")
         self.jazz.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.jazz, 2, 8, 1, 1)
@@ -145,6 +318,7 @@ class Ui_MainWindow(object):
         self.blues = QLineEdit(self.groupBox)
         self.blues.setObjectName(u"blues")
         self.blues.setFocusPolicy(Qt.NoFocus)
+        self.blues.setStyleSheet(u"border: 1px solid black;")
         self.blues.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.blues, 1, 1, 1, 1)
@@ -152,6 +326,7 @@ class Ui_MainWindow(object):
         self.hiphop = QLineEdit(self.groupBox)
         self.hiphop.setObjectName(u"hiphop")
         self.hiphop.setFocusPolicy(Qt.NoFocus)
+        self.hiphop.setStyleSheet(u"border: 1px solid black;")
         self.hiphop.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.hiphop, 1, 8, 1, 1)
@@ -171,6 +346,7 @@ class Ui_MainWindow(object):
         self.country = QLineEdit(self.groupBox)
         self.country.setObjectName(u"country")
         self.country.setFocusPolicy(Qt.NoFocus)
+        self.country.setStyleSheet(u"border: 1px solid black;")
         self.country.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.country, 2, 1, 1, 1)
@@ -190,6 +366,7 @@ class Ui_MainWindow(object):
         self.rock = QLineEdit(self.groupBox)
         self.rock.setObjectName(u"rock")
         self.rock.setFocusPolicy(Qt.NoFocus)
+        self.rock.setStyleSheet(u"border: 1px solid black;")
         self.rock.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.rock, 2, 14, 1, 1)
@@ -197,6 +374,7 @@ class Ui_MainWindow(object):
         self.classical = QLineEdit(self.groupBox)
         self.classical.setObjectName(u"classical")
         self.classical.setFocusPolicy(Qt.NoFocus)
+        self.classical.setStyleSheet(u"border: 1px solid black;")
         self.classical.setReadOnly(True)
 
         self.gridLayout_5.addWidget(self.classical, 1, 4, 1, 2)
@@ -213,45 +391,6 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout.addWidget(self.groupBox, 5, 0, 1, 12)
-
-        self.label_16 = QLabel(self.centralwidget)
-        self.label_16.setObjectName(u"label_16")
-
-        self.gridLayout.addWidget(self.label_16, 6, 8, 1, 1)
-
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer_3, 6, 4, 1, 2)
-
-        self.right_btn = QPushButton(self.centralwidget)
-        self.right_btn.setObjectName(u"right_btn")
-
-        self.gridLayout.addWidget(self.right_btn, 4, 11, 1, 1)
-
-        self.confidence_line = QLineEdit(self.centralwidget)
-        self.confidence_line.setObjectName(u"confidence_line")
-        self.confidence_line.setMaximumSize(QSize(120, 16777215))
-        self.confidence_line.setReadOnly(True)
-
-        self.gridLayout.addWidget(self.confidence_line, 6, 9, 1, 1)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer, 6, 0, 1, 1)
-
-        self.start_btn = QPushButton(self.centralwidget)
-        self.start_btn.setObjectName(u"start_btn")
-
-        self.gridLayout.addWidget(self.start_btn, 4, 10, 1, 1)
-
-        self.left_btn = QPushButton(self.centralwidget)
-        self.left_btn.setObjectName(u"left_btn")
-
-        self.gridLayout.addWidget(self.left_btn, 4, 9, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer_2, 6, 10, 1, 2)
 
         self.stackedWidget_2 = QStackedWidget(self.centralwidget)
         self.stackedWidget_2.setObjectName(u"stackedWidget_2")
@@ -287,90 +426,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.stackedWidget_2, 3, 9, 1, 3)
 
-        self.stackedWidget = QStackedWidget(self.centralwidget)
-        self.stackedWidget.setObjectName(u"stackedWidget")
-        self.page = QWidget()
-        self.page.setObjectName(u"page")
-        self.gridLayout_4 = QGridLayout(self.page)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.graph = PlotWidget(self.page)
-        self.graph.setObjectName(u"graph")
-        self.graph.setMinimumSize(QSize(0, 300))
-        self.icon = QLabel(self.graph)
-        self.icon.setObjectName(u"icon")
-        self.icon.setGeometry(QRect(0, 0, 501, 461))
-        font2 = QFont()
-        font2.setPointSize(200)
-        self.icon.setFont(font2)
-        self.icon.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_4.addWidget(self.graph, 1, 1, 1, 1)
-
-        self.stackedWidget.addWidget(self.page)
-        self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
-        self.gridLayout_3 = QGridLayout(self.page_2)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.stackedWidget.addWidget(self.page_2)
-
-        self.gridLayout.addWidget(self.stackedWidget, 0, 0, 5, 9)
-
-        self.groupBox_2 = QGroupBox(self.centralwidget)
-        self.groupBox_2.setObjectName(u"groupBox_2")
-        self.groupBox_2.setMinimumSize(QSize(0, 200))
-        self.gridLayout_6 = QGridLayout(self.groupBox_2)
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.slider = QSlider(self.groupBox_2)
-        self.slider.setObjectName(u"slider")
-        self.slider.setMinimumSize(QSize(250, 0))
-        self.slider.setOrientation(Qt.Horizontal)
-
-        self.gridLayout_6.addWidget(self.slider, 2, 4, 1, 8)
-
-        self.time_label = QLabel(self.groupBox_2)
-        self.time_label.setObjectName(u"time_label")
-
-        self.gridLayout_6.addWidget(self.time_label, 2, 12, 1, 1)
-
-        self.pause_btn = QPushButton(self.groupBox_2)
-        self.pause_btn.setObjectName(u"pause_btn")
-        self.pause_btn.setMaximumSize(QSize(50, 16777215))
-
-        self.gridLayout_6.addWidget(self.pause_btn, 2, 2, 1, 1)
-
-        self.file_name = QLineEdit(self.groupBox_2)
-        self.file_name.setObjectName(u"file_name")
-        self.file_name.setStyleSheet(u"border-color: rgb(0, 0, 0);")
-
-        self.gridLayout_6.addWidget(self.file_name, 1, 1, 1, 10)
-
-        self.stop_btn = QPushButton(self.groupBox_2)
-        self.stop_btn.setObjectName(u"stop_btn")
-        self.stop_btn.setMaximumSize(QSize(50, 16777215))
-
-        self.gridLayout_6.addWidget(self.stop_btn, 2, 3, 1, 1)
-
-        self.play_btn = QPushButton(self.groupBox_2)
-        self.play_btn.setObjectName(u"play_btn")
-        self.play_btn.setMaximumSize(QSize(50, 16777215))
-
-        self.gridLayout_6.addWidget(self.play_btn, 2, 1, 1, 1)
-
-        self.file_btn = QPushButton(self.groupBox_2)
-        self.file_btn.setObjectName(u"file_btn")
-
-        self.gridLayout_6.addWidget(self.file_btn, 1, 11, 1, 1)
-
-        self.label = QLabel(self.groupBox_2)
-        self.label.setObjectName(u"label")
-        self.label.setMinimumSize(QSize(0, 30))
-        self.label.setMaximumSize(QSize(16777215, 30))
-
-        self.gridLayout_6.addWidget(self.label, 0, 1, 1, 12)
-
-
-        self.gridLayout.addWidget(self.groupBox_2, 0, 9, 3, 3)
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -378,8 +433,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -388,7 +443,18 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.actionZapisz_do_Excela.setText(QCoreApplication.translate("MainWindow", u"Zapisz do Excela", None))
+        self.right_btn.setText("")
+        self.groupBox_2.setTitle("")
+        self.pause_btn.setText("")
+        self.play_btn.setText("")
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Wybierz plik w formacie .mp3 lub .wav do przeprowadzenia analizy:", None))
+        self.file_btn.setText(QCoreApplication.translate("MainWindow", u"Wybierz", None))
+        self.time_label.setText(QCoreApplication.translate("MainWindow", u"00:00", None))
+        self.stop_btn.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Wynik rozpoznania:", None))
+        self.start_btn.setText(QCoreApplication.translate("MainWindow", u"START", None))
+        self.label_16.setText(QCoreApplication.translate("MainWindow", u"Pewno\u015b\u0107:", None))
+        self.left_btn.setText("")
         self.groupBox.setTitle("")
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Metal:", None))
         self.pop.setText("")
@@ -402,19 +468,7 @@ class Ui_MainWindow(object):
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Country:", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Hiphop:", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Detekcja gatunku muzyki - procentowe warto\u015bci dla obecnego utworu", None))
-        self.label_16.setText(QCoreApplication.translate("MainWindow", u"Pewno\u015b\u0107:", None))
-        self.right_btn.setText(QCoreApplication.translate("MainWindow", u">", None))
-        self.start_btn.setText(QCoreApplication.translate("MainWindow", u"START", None))
-        self.left_btn.setText(QCoreApplication.translate("MainWindow", u"<", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"MODEL SZYMKA", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"MODEL MFCC", None))
-        self.icon.setText(QCoreApplication.translate("MainWindow", u"\u266c", None))
-        self.groupBox_2.setTitle("")
-        self.time_label.setText(QCoreApplication.translate("MainWindow", u"00:00", None))
-        self.pause_btn.setText(QCoreApplication.translate("MainWindow", u"\u23f8\ufe0e", None))
-        self.stop_btn.setText(QCoreApplication.translate("MainWindow", u"\u25a0", None))
-        self.play_btn.setText(QCoreApplication.translate("MainWindow", u"\u25b6", None))
-        self.file_btn.setText(QCoreApplication.translate("MainWindow", u"Wybierz", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Wybierz plik w formacie .mp3 lub .wav do przeprowadzenia analizy:", None))
     # retranslateUi
 
