@@ -9,19 +9,7 @@ from get_mfcc_for_one_file_28 import get_mfcc_for_one_file_28, get_mfcc_stft_for
 
 
 def get_spectogram_for_one_file(path, sample_length=28):
-    # audio, sr = librosa.load(path)
-    # n_fft = 2048
-    # hop_length = 512
-    # frame_length = int(sr * time_step)
-    # print(frame_length)
-    # # hop_length_frames = int(frame_length / 2)  # 50% overlap
 
-    # frames = librosa.util.frame(audio, frame_length=frame_length, hop_length=frame_length)
-    # print(frames.shape)
-    # spectrogram_features = []
-    # for i in range(frames.shape[1]):
-    #     feature = librosa.feature.melspectrogram(y=frames[:, i], sr=sr, n_fft=n_fft, hop_length=hop_length)
-    #     spectrogram_features.append(feature)
     SAMPLING_RATE = 44100  # 44.1 kHz is a "standard" sampling rate.
 
     length_of_sample = sample_length  # Sample length in seconds.
@@ -54,45 +42,30 @@ def get_spectogram_for_one_file(path, sample_length=28):
             # plt.show()
 
             spec.append(image)
-            # break
-            # new_file_name = "spectrogram" + "(" + str(counter) + ").png"
-            # counter += 1
 
-            # plt.imsave(save_spectogram_path + r"/" + new_file_name, spectrogram, cmap='gray')
-            # del spectrogram
-            # gc.collect()
-        # del audio_timeseries
-        # gc.collect()
-    # print(image.shape)
     return np.array(spec)
 
 def get_prediction_mfcc(model_selector, path):
-    # if model_selector == 1:
-    #     model = tf.keras.models.load_model('my_model.h5')
-    #     mfcc = get_mfcc_for_one_file(path)
-    # elif model_selector == 2:
-    #     model = tf.keras.models.load_model('my_model_stft.h5')
-    #     mfcc = get_mfcc_stft_for_one_file(path)
-    # elif model_selector == 3:
-    #     model = tf.keras.models.load_model('my_model_only.h5')
-    #     mfcc = get_mfcc_only_for_one_file(path)
-    # elif model_selector == 4:
-    #     model = tf.keras.models.load_model('my_model_stf_28.h5')
-    #     mfcc = get_mfcc_stft_for_one_file_28(path)
     pred = []
     if model_selector == 1:
-        model = tf.keras.models.load_model('code\my_model_28.h5')
+
+        model = tf.keras.models.load_model('..\Model\my_model_28.h5')
         mfcc = get_mfcc_for_one_file_28(path)
         pred = model.predict(mfcc)
         average_pred = np.mean(pred, axis=0)
     elif model_selector == 2:
-        model = tf.keras.models.load_model('code\MobileNet.h5')
+        model = tf.keras.models.load_model('..\Model\MobileNet.h5')
         mfcc = get_spectogram_for_one_file(path, 28)
-        
+
         for el in mfcc:
             pred.append(model.predict(el))
         # pred = model.predict(mfcc)
         average_pred = np.mean(pred, axis=0)[0]
+    elif model_selector == 3:
+        model = tf.keras.models.load_model('..\Model\my_model_stft_28.h5')
+        mfcc = get_mfcc_stft_for_one_file_28(path)
+        pred = model.predict(mfcc)
+        average_pred = np.mean(pred, axis=0)
     else:
         raise ValueError("Invalid model type")
 
