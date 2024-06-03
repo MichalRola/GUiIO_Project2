@@ -4,7 +4,8 @@ import numpy as np
 import sys
 
 from pydub import AudioSegment
-
+import tensorflow as tf
+from tensorflow import keras
 from mp3_to_wav import mp3_to_wav, change_suffix
 from get_prediction_mfcc import get_prediction_mfcc
 
@@ -29,16 +30,13 @@ def change_suffix(filename):
     return os.path.splitext(filename)[0] + '.wav'
 
 # Ścieżki
-input_folder = 'Data'
-save_path = r'Data'
+input_folder = 'code\Data\genres_original'
+save_path = r'code\Data\genres_original'
 results = []
 genres = ["Blues", "Classical", "Country", "Disco", "HipHop", "Jazz", "Metal", "Pop", "Reggae", "Rock"]
 model_names = [
-    "MFCC na spektogramie",
-    "MFCC na STFT",
-    "MFCC",
     "MFCC na spektogramie dla 28 sekund",
-    "MFCC na STFT na 28 sekund"
+    "Ten lepszy model spec"
 ]
 # Przejście przez wszystkie pliki MP3 w podfolderach
 for root, _, files in os.walk(input_folder):
@@ -69,6 +67,12 @@ for root, _, files in os.walk(input_folder):
 
                 prediction = get_prediction_mfcc(model_id, output_path)
                 max_genre = genres[np.argmax(prediction)]
+                if max_genre == "Rock":
+                    prediction_stft = get_prediction_mfcc(3, output_path)
+                    max_genre_stft = genres[np.argmax(prediction)]
+                    if max_genre_stft == "Metal":
+                        prediction = prediction_stft
+                        max_genre = max_genre_stft
                 result = [filename, model_name] + prediction.tolist() + [max_genre]
                 results.append(result)
 
@@ -78,4 +82,4 @@ columns = ['Original File', 'Model'] + genres + ['Predicted Genre']
 
 # Zapis wyników do pliku Excel
 df = pd.DataFrame(results, columns=columns)
-df.to_excel('predictions_orginal.xlsx', index=False)
+df.to_excel('predictions_origin.xlsx', index=False)

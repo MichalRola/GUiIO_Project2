@@ -13,8 +13,8 @@ Link do logów:
 https://drive.google.com/drive/folders/1qEjVXV-c2gv3BTmcR580F8YPZ5mPbaUS?usp=drive_link
 '''
 
-model = tf.keras.models.load_model('../models/saved_model/MobileNet_3s_v3.h5')
-image = plt.imread("code/Data/spectrograms/pop/00000(0).png")[:, :, 1]
+model = tf.keras.models.load_model('../models/saved_model/MobileNet.h5')
+image = plt.imread("code/Data/spectrograms/blues/00000(0).png")[:, :, 1]
 
 image = np.repeat(image[:, :, np.newaxis], 3, axis=2)
 image = np.expand_dims(image, axis=0)
@@ -23,6 +23,7 @@ image = np.transpose(image, (0, 2, 1, 3))
 labels = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
 
 pred = model(image)
+print(type(image))
 print(pred)
 
 print(labels[np.argmax(pred)])
