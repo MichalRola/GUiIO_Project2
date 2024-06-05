@@ -85,6 +85,10 @@ class MainWindow(QMainWindow):
                     x.setText("")
                 self.ui.predict_line.setText("")
                 self.ui.confidence_line.setText("")
+                self.hide_graph()
+                self.label_new.show()
+                self.ui.stop_btn.setEnabled(False)
+                self.ui.pause_btn.setEnabled(False)
 
                 time = librosa.get_duration(path=str(response[0]))
                 print(time)
@@ -135,9 +139,10 @@ class MainWindow(QMainWindow):
         self.ui.left_btn.show()
     
     def start(self):
-        self.label_new.hide()
+        
 
         if self.ui.stackedWidget_2.currentIndex() == 0:
+            self.label_new.hide()
             output, ret_img, all_pred, pred_num = generate_heatmap_from_audio(
                                     model_path="Model/MobileNet.h5",
                                     chunk_size=30,
@@ -186,6 +191,10 @@ class MainWindow(QMainWindow):
         self.ui.graph.canvas.axes.set_ylabel("Częstotliwość")
         self.ui.graph.canvas.axes.figure.tight_layout()
         self.ui.graph.canvas.draw()
+    
+    def hide_graph(self):
+        self.ui.graph.canvas.axes.clear()
+        self.ui.graph.hide()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
